@@ -15,13 +15,14 @@ class BaseModel(models.Model):
 
 # UserProfile.objects.filter(owner=request.user)
 # request.user.profile.profile_picture
+# null=True in all fields except owner as user registers Userprofile should be created without values in other fields except owner
 class UserProfile(BaseModel):
 
-    bio=models.CharField(max_length=200)
+    bio=models.CharField(max_length=200,null=True) 
 
-    profile_picture=models.ImageField(upload_to="profilepictures",null=True,blank=True)
+    profile_picture=models.ImageField(upload_to="profilepictures",null=True,blank=True,default="profilepictures/default.png")
 
-    phone=models.CharField(max_length=200)
+    phone=models.CharField(max_length=200,null=True)
 
     owner=models.OneToOneField(User,on_delete=models.CASCADE,related_name="profile")
 
@@ -77,7 +78,26 @@ class Order(BaseModel):
 
     order_id=models.CharField(max_length=200,null=True)
 
-    
+from django.db.models.signals import post_save 
+
+def create_user_profile(sender,instance,created,**kwargs):
+
+    if created:
+
+        UserProfile.objects.create(owner=instance)
+
+post_save.connect(create_user_profile,sender=User)       
+
+
+def create_wish_list(sender,instance,created,**kwargs):
+
+    if created:
+
+        WishList.objects.create(owner=instance)
+
+post_save.connect(create_wish_list,sender=User)        
+
+
 
 
 
