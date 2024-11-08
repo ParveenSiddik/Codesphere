@@ -40,7 +40,7 @@
                   </li>
       
                   <li>
-                    <a class="text-gray-500 transition hover:text-gray-500/75" href="#"> Services </a>
+                    <a class="text-gray-500 transition hover:text-gray-500/75" href="{%url 'mywishlist'%}">WishList ({{cart_item_count}})</a>
                   </li>
       
                   <li>
@@ -148,8 +148,17 @@
     <!-- nav end -->
 
     <!-- main block start -->
-     {%block main_block%}
+    {%if messages%}
 
+    {%for m in messages%}
+
+    {{m}}
+
+    {%endfor%}
+
+    {%endif%}
+
+     {%block main_block%}
 
      {%endblock%}
      <!-- main block end -->
